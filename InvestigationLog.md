@@ -14,3 +14,10 @@ Minimal SQLite requirements from existing code
 SQLite DB: feedback.db
 table name: feedback
 fields: message (text), rating (int), created_at (date)
+
+* started minor refactor on backend to remove sql injection and add better errors
+  * added some default records to the database 
+* wired front end to backend got an error as the results are not in json
+  * added CORS 
+  * added proxy (made sure it was 127.0.0.1)
+  * tweaked the output to be JSON  
