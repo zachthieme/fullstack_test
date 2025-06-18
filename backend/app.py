@@ -106,6 +106,10 @@ def post_feedback():
             {"error": "Invalid data type on either 'message' or 'rating'"}
         ), 400
 
+    # ensure that  the rating is in the proper range
+    if not (1 <= rating <= 5):
+        return jsonify({"error": "Rating on in range 1 - 5"}), 400
+
     if not created_at:
         created_at = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
