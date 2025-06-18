@@ -26,8 +26,7 @@ cd backend
 python3 -m venv venv
 source venv/bin/activate
 pip install flask
-sqlite3 feedback.db 
-  exu
+pip install flask-cors
 python app.py
 ```
 

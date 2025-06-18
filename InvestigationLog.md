@@ -21,3 +21,8 @@ fields: message (text), rating (int), created_at (date)
   * added CORS 
   * added proxy (made sure it was 127.0.0.1)
   * tweaked the output to be JSON  
+* added the rest of the ratings to the drop down
+* added date filters
+* added sort 
+* minor visualization tweak
+* added requirements.txt
