@@ -7,7 +7,7 @@ function App() {
   const [feedback, setFeedback] = useState([]);
 
   // Filters
-  const [rating, setRating] = useState(null);
+  const [rating, setRating] = useState('');
   const [from, setFrom] = useState('')
   const [to, setTo] = useState('')
   const [sortOrder, setSortOrder] = useState('desc')
@@ -21,7 +21,7 @@ function App() {
 
   const loadFeedback = () => {
     const params = new URLSearchParams();
-    if (rating) params.append('rating', rating);
+    if (rating && rating !== '') params.append('rating', rating);
     if (from) params.append('from', from);
     if (to) params.append('to', to);
     if (sortOrder) params.append('sort', sortOrder);
@@ -65,7 +65,7 @@ function App() {
   useEffect(() => {
     // Query string with only selected parameters
     const params = new URLSearchParams();
-    if (rating) params.append('rating', rating);
+    if (rating && rating !== '') params.append('rating', rating);
     if (from) params.append('from', from);
     if (to) params.append('to', to);
     if (sortOrder) params.append('sort', sortOrder);
@@ -78,9 +78,12 @@ function App() {
 
   return (
     <div>
-      <label>      <h1>Feedback Dashboard</h1>
-        {/* FILTERS */}
-        <select onChange={(e) => setRating(e.target.value)}>
+      <h1>Feedback Dashboard</h1>
+      
+      {/* FILTERS */}
+      <label>
+        Rating:&nbsp;
+        <select value={rating} onChange={(e) => setRating(e.target.value)}>
           <option value="">All</option>
           <option value="5">★★★★★</option>
           <option value="4">★★★★</option>
@@ -93,7 +96,7 @@ function App() {
         From:&nbsp;
         <input
           type='date'
-          value={from}
+          value={from || ''}
           onChange={e => setFrom(e.target.value.trim())}
         />
       </label>
@@ -101,13 +104,13 @@ function App() {
         To:&nbsp;
         <input
           type='date'
-          value={to}
+          value={to || ''}
           onChange={e => setTo(e.target.value.trim())}
         />
       </label>
       <label style={{ marginLeft: 16 }}>
         Sort:&nbsp;
-        <select value={sortOrder} onChange={e => setSortOrder(e.target.value.trim())}>
+        <select value={sortOrder || 'desc'} onChange={e => setSortOrder(e.target.value.trim())}>
           <option value="desc">Newest First</option>
           <option value="asc">Oldest First</option>
         </select>
@@ -133,12 +136,12 @@ function App() {
           <textarea
             rows={3}
             placeholder="Your feedback..."
-            value={newMessage}
+            value={newMessage || ''}
             onChange={e => setNewMessage(e.target.value)}
           />
           <label>
             Rating:&nbsp;
-            <select value={newRating} onChange={e => setNewRating(e.target.value)}>
+            <select value={newRating || '5'} onChange={e => setNewRating(e.target.value)}>
               <option value='5'>★★★★★</option>
               <option value='4'>★★★★</option>
               <option value='3'>★★★</option>
@@ -150,7 +153,7 @@ function App() {
             Date:&nbsp;
             <input
               type="date"
-              value={newDate}
+              value={newDate || format(new Date(), 'yyyy-MM-dd')}
               onChange={e => setNewDate(e.target.value)}
             />
           </label>
