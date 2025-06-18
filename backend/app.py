@@ -1,9 +1,37 @@
 # app.py - Mock Flask backend (with bugs)
-# TODO: add requirements.txt
+import sqlite3
+import os
 from flask import Flask, request, jsonify, abort
 from flask_cors import CORS
-import sqlite3
 from datetime import datetime, timezone
+
+
+def check_and_init_db():
+    db_path = "feedback.db"
+    create_table_sql = """
+    CREATE TABLE IF NOT EXISTS feedback (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        message TEXT NOT NULL,
+        rating INTEGER NOT NULL,
+        created_at DATE NOT NULL DEFAULT CURRENT_DATE
+    );
+    """
+
+    # create sqlite db if it doesn't exist
+    if not os.path.exists(db_path):
+        print("[INFO] feedback.db not found. Creating...")
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute(create_table_sql)
+        conn.commit()
+        conn.close()
+    else:
+        # make sure table exists
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute(create_table_sql)
+        conn.commit()
+        conn.close()
 
 
 app = Flask(__name__)
@@ -89,4 +117,5 @@ def post_feedback():
 
 
 if __name__ == "__main__":
+    check_and_init_db()
     app.run(debug=True)

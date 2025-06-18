@@ -26,3 +26,4 @@ fields: message (text), rating (int), created_at (date)
 * added sort 
 * minor visualization tweak
 * added requirements.txt
+* updated readme to inlclude using requirements.txt and removed db creation stuff as i added it to app.py
