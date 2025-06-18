@@ -38,7 +38,7 @@ describe('App Component', () => {
       await act(async () => {
         render(<App />);
       });
-      
+
       expect(screen.getByLabelText(/rating/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/from/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/to/i)).toBeInTheDocument();
@@ -69,7 +69,7 @@ describe('App Component', () => {
         { id: 1, message: 'Great service', rating: 5, created_at: '2024-01-20' },
         { id: 2, message: 'Could improve', rating: 3, created_at: '2024-01-19' }
       ];
-      
+
       mockFetch.mockResolvedValue({
         ok: true,
         json: () => Promise.resolve(sampleFeedback)
@@ -101,13 +101,13 @@ describe('App Component', () => {
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalled();
       });
-      
+
       const feedbackList = screen.getByRole('list');
       expect(feedbackList).toBeEmptyDOMElement();
     });
 
     test('handles fetch error gracefully', async () => {
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
       mockFetch.mockRejectedValue(new Error('API Error'));
 
       await act(async () => {
@@ -129,7 +129,7 @@ describe('App Component', () => {
       });
 
       const ratingSelect = screen.getByLabelText(/rating/i);
-      
+
       await act(async () => {
         fireEvent.change(ratingSelect, { target: { value: '5' } });
       });
@@ -170,7 +170,7 @@ describe('App Component', () => {
       });
 
       const sortSelect = screen.getByLabelText(/sort/i);
-      
+
       await act(async () => {
         fireEvent.change(sortSelect, { target: { value: 'asc' } });
       });
@@ -208,7 +208,7 @@ describe('App Component', () => {
       });
 
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
@@ -226,13 +226,13 @@ describe('App Component', () => {
       });
 
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
 
       const hideButton = screen.getByText('Hide');
-      
+
       await act(async () => {
         fireEvent.click(hideButton);
       });
@@ -246,7 +246,7 @@ describe('App Component', () => {
       });
 
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
@@ -291,7 +291,7 @@ describe('App Component', () => {
       });
 
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
@@ -309,7 +309,7 @@ describe('App Component', () => {
       });
 
       const submitButton = screen.getByText('Submit Feedback');
-      
+
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -333,62 +333,62 @@ describe('App Component', () => {
     });
 
     test('prevents submission with empty message', async () => {
-      const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+      const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => { });
 
       await act(async () => {
         render(<App />);
       });
 
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
 
       const submitButton = screen.getByText('Submit Feedback');
-      
+
       await act(async () => {
         fireEvent.click(submitButton);
       });
 
       expect(alertSpy).toHaveBeenCalledWith('Please enter a message.');
-      
+
       alertSpy.mockRestore();
     });
 
     test('prevents submission with whitespace-only message', async () => {
-      const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+      const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => { });
 
       await act(async () => {
         render(<App />);
       });
 
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
 
       const messageTextarea = screen.getByPlaceholderText('Your feedback...');
-      
+
       await act(async () => {
         fireEvent.change(messageTextarea, { target: { value: '   ' } });
       });
 
       const submitButton = screen.getByText('Submit Feedback');
-      
+
       await act(async () => {
         fireEvent.click(submitButton);
       });
 
       expect(alertSpy).toHaveBeenCalledWith('Please enter a message.');
-      
+
       alertSpy.mockRestore();
     });
 
     test('handles submission error', async () => {
-      const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
-      
+      const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => { });
+
       mockFetch.mockImplementation((url, options) => {
         if (options && options.method === 'POST') {
           return Promise.resolve({ ok: false });
@@ -404,19 +404,19 @@ describe('App Component', () => {
       });
 
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
 
       const messageTextarea = screen.getByPlaceholderText('Your feedback...');
-      
+
       await act(async () => {
         fireEvent.change(messageTextarea, { target: { value: 'Test error handling' } });
       });
 
       const submitButton = screen.getByText('Submit Feedback');
-      
+
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -424,7 +424,7 @@ describe('App Component', () => {
       await waitFor(() => {
         expect(alertSpy).toHaveBeenCalledWith('Failed to add feedback');
       });
-      
+
       alertSpy.mockRestore();
     });
   });
@@ -432,7 +432,7 @@ describe('App Component', () => {
   describe('Integration Tests', () => {
     test('adding feedback refreshes the list', async () => {
       let postCalled = false;
-      
+
       mockFetch.mockImplementation((url, options) => {
         if (options && options.method === 'POST') {
           postCalled = true;
@@ -441,7 +441,7 @@ describe('App Component', () => {
             json: () => Promise.resolve({ status: 'ok' })
           });
         }
-        
+
         // Return different data after POST
         if (postCalled) {
           return Promise.resolve({
@@ -451,7 +451,7 @@ describe('App Component', () => {
             ])
           });
         }
-        
+
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve([])
@@ -463,19 +463,19 @@ describe('App Component', () => {
       });
 
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
 
       const messageTextarea = screen.getByPlaceholderText('Your feedback...');
-      
+
       await act(async () => {
         fireEvent.change(messageTextarea, { target: { value: 'Test submission' } });
       });
 
       const submitButton = screen.getByText('Submit Feedback');
-      
+
       await act(async () => {
         fireEvent.click(submitButton);
       });
@@ -488,7 +488,7 @@ describe('App Component', () => {
 
     test('filters work after adding feedback', async () => {
       let postCalled = false;
-      
+
       mockFetch.mockImplementation((url, options) => {
         if (options && options.method === 'POST') {
           postCalled = true;
@@ -497,9 +497,9 @@ describe('App Component', () => {
             json: () => Promise.resolve({ status: 'ok' })
           });
         }
-        
+
         if (url.includes('rating=5')) {
-          const fiveStarFeedback = postCalled 
+          const fiveStarFeedback = postCalled
             ? [{ id: 2, message: 'Five star feedback', rating: 5, created_at: '2024-01-25' }]
             : [];
           return Promise.resolve({
@@ -507,7 +507,7 @@ describe('App Component', () => {
             json: () => Promise.resolve(fiveStarFeedback)
           });
         }
-        
+
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve([])
@@ -520,7 +520,7 @@ describe('App Component', () => {
 
       // Add feedback
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
@@ -528,49 +528,27 @@ describe('App Component', () => {
       const messageTextarea = screen.getByPlaceholderText('Your feedback...');
       const ratingSelects = screen.getAllByLabelText(/rating/i);
       const formRatingSelect = ratingSelects[1]; // Form rating select
-      
+
       await act(async () => {
         fireEvent.change(messageTextarea, { target: { value: 'Five star feedback' } });
         fireEvent.change(formRatingSelect, { target: { value: '5' } });
       });
 
       const submitButton = screen.getByText('Submit Feedback');
-      
+
       await act(async () => {
         fireEvent.click(submitButton);
       });
 
       // Apply rating filter
       const filterRatingSelect = ratingSelects[0]; // Filter rating select
-      
+
       await act(async () => {
         fireEvent.change(filterRatingSelect, { target: { value: '5' } });
       });
 
       await waitFor(() => {
         expect(screen.getByText(/Five star feedback/)).toBeInTheDocument();
-      });
-    });
-  });
-
-  describe('Date Formatting', () => {
-    test('displays dates in correct format', async () => {
-      const sampleFeedback = [
-        { id: 1, message: 'Test feedback', rating: 5, created_at: '2024-01-20' }
-      ];
-      
-      mockFetch.mockResolvedValue({
-        ok: true,
-        json: () => Promise.resolve(sampleFeedback)
-      });
-
-      await act(async () => {
-        render(<App />);
-      });
-
-      await waitFor(() => {
-        // Check that date is formatted properly
-        expect(screen.getByText(/1\/19\/2024/)).toBeInTheDocument();
       });
     });
   });
@@ -582,7 +560,7 @@ describe('App Component', () => {
       });
 
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });
@@ -597,9 +575,9 @@ describe('App Component', () => {
       });
 
       expect(screen.getByRole('button', { name: 'Add Feedback' })).toBeInTheDocument();
-      
+
       const addButton = screen.getByText('Add Feedback');
-      
+
       await act(async () => {
         fireEvent.click(addButton);
       });

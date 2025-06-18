@@ -65,6 +65,8 @@
   - Removed manual DB setup instructions (now handled in `app.py`).
 - Added basic "create" workflow (for adding new feedback).
 - added tests via claude 4.0
+- added input validating for rating and updated tests
+- noticed that the dates in the ui are displaying as a day in the past eventhough the backend is sending the correct dates. resolved by properly using utc through the app.
 
 
 # Raw Notes

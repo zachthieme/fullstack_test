@@ -4,6 +4,7 @@ import os
 from flask import Flask, request, jsonify, abort
 from flask_cors import CORS
 from datetime import datetime, timezone
+from dateutil import parser
 
 
 def check_and_init_db():
@@ -13,7 +14,7 @@ def check_and_init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         message TEXT NOT NULL,
         rating INTEGER NOT NULL,
-        created_at DATE NOT NULL DEFAULT CURRENT_DATE
+        created_at TEXT NOT NULL
     );
     """
 
@@ -93,7 +94,6 @@ def post_feedback():
 
     message = data.get("message")
     rating = data.get("rating")
-    # TODO: make FE handle timezones
     created_at = data.get("created_at")
 
     # confirm that there is a value provided - in a production system we would want distinct errors to track issues faster
@@ -110,13 +110,21 @@ def post_feedback():
     if not (1 <= rating <= 5):
         return jsonify({"error": "Rating on in range 1 - 5"}), 400
 
-    if not created_at:
-        created_at = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    try:
+        if created_at:
+            # Parse assumed local time and convert to UTC
+            local_dt = parser.parse(created_at)
+            utc_dt = local_dt.astimezone(timezone.utc)
+        else:
+            utc_dt = datetime.now(timezone.utc)
 
-    # TODO: add try so we can catch failures and add a 500
+        created_at_utc_str = utc_dt.isoformat()
+    except Exception as e:
+        return jsonify({"error": f"Invalid date format: {e}"}), 400
+
     cursor.execute(
         "INSERT INTO feedback (message, rating, created_at) VALUES (?, ?, ?)",
-        (message, rating, created_at),
+        (message, rating, created_at_utc_str),
     )
     conn.commit()
     conn.close()

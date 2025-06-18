@@ -4,7 +4,8 @@ import os
 import tempfile
 from app import app, check_and_init_db
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timezone
+from dateutil import parser
 
 
 @pytest.fixture
@@ -45,10 +46,22 @@ def client():
 def sample_feedback():
     """Sample feedback data for testing."""
     return [
-        {"message": "Great service!", "rating": 5, "created_at": "2024-01-15"},
-        {"message": "Could be better", "rating": 3, "created_at": "2024-01-16"},
-        {"message": "Excellent experience", "rating": 5, "created_at": "2024-01-17"},
-        {"message": "Poor quality", "rating": 2, "created_at": "2024-01-18"},
+        {
+            "message": "Great service!",
+            "rating": 5,
+            "created_at": "2024-01-15T10:00:00Z",
+        },
+        {
+            "message": "Could be better",
+            "rating": 3,
+            "created_at": "2024-01-16T10:00:00Z",
+        },
+        {
+            "message": "Excellent experience",
+            "rating": 5,
+            "created_at": "2024-01-17T10:00:00Z",
+        },
+        {"message": "Poor quality", "rating": 2, "created_at": "2024-01-18T10:00:00Z"},
     ]
 
 
@@ -196,7 +209,7 @@ class TestPostFeedback:
         assert len(data) == 1
         assert data[0]["message"] == "Test feedback"
         assert data[0]["rating"] == 4
-        assert data[0]["created_at"] == "2024-01-20"
+        assert data[0]["created_at"] == "2024-01-20T08:00:00+00:00"
 
     def test_post_feedback_without_date(self, client):
         """Test posting feedback without created_at (should use current date)."""
@@ -215,8 +228,13 @@ class TestPostFeedback:
         assert data[0]["message"] == "Test feedback without date"
         assert data[0]["rating"] == 3
         # Check that created_at is today's date
-        today = datetime.now().strftime("%Y-%m-%d")
-        assert data[0]["created_at"] == today
+        created_at = parser.isoparse(data[0]["created_at"])
+        now_utc = datetime.now(timezone.utc)
+
+        # Assert the date is "close enough" to now
+        assert abs((now_utc - created_at).total_seconds()) < 10
+        # today = datetime.now().strftime("%Y-%m-%d")
+        # assert datetime.strptime(data[0]["created_at"], "%Y-%m-%d") == today
 
     def test_post_feedback_missing_message(self, client):
         """Test posting feedback without message returns 400."""
@@ -386,4 +404,3 @@ class TestEdgeCases:
         )
 
         assert response.status_code == 400
-
