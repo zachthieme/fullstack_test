@@ -1,3 +1,73 @@
+
+# Project Setup and Progress Notes
+
+## Setup and Initial Fixes
+
+### Backend
+- Followed instructions in the README.
+- Initially, `app.py` ran without errors but exited immediately.
+  - **Issue**: `app.run()` was missing.
+  - **Fix**: Added `app.run()` — backend now starts properly.
+- Tested the `/feedback` route — received error: _"no such table: feedback"_.
+  - **Issue**: SQLite database wasn't initialized.
+  - **Fix**: 
+    - Created `feedback.db` and the required `feedback` table.
+    - Added a test record.
+    - Verified that the GET endpoint returns the added data.
+  - **Update**: README updated to reflect these steps.
+
+### Frontend
+- `npm install` failed — no `package.json`.
+  - **Fix**: Used `npx create-react-app app` to bootstrap a basic React app.
+- Updated `.gitignore` to exclude:
+  - `node_modules`
+  - `venv`
+  - `feedback.db`
+
+## SQLite Schema
+
+### Minimal SQLite Requirements
+- **Database**: `feedback.db`
+- **Table**: `feedback`
+- **Fields**:
+  - `id` (INTEGER)
+  - `message` (TEXT)
+  - `rating` (INTEGER)
+  - `created_at` (DATE)
+
+## Backend Enhancements
+
+- Began refactoring backend:
+  - Improved error handling.
+  - Removed potential SQL injection vulnerabilities.
+  - Added some default records to the database.
+
+## Frontend & Backend Integration
+
+- Connected frontend to backend — initial request failed due to non-JSON response.
+  - **Troubleshooting** (via Chrome DevTools):
+    - Identified and resolved CORS errors:
+      - Added CORS support.
+      - Configured frontend proxy to `127.0.0.1`.
+    - Adjusted backend output to return valid JSON.
+- UI improvements:
+  - Added dropdown options for all ratings.
+  - Implemented date filtering.
+    - Debugged a `400` error — root cause: incorrect date format (`m%` instead of `%m` in `%Y-%m-%d`).
+  - Added sorting functionality.
+  - Made minor visualization tweaks.
+
+## Final Updates
+
+- Created `requirements.txt`.
+- Updated README:
+  - Documented use of `requirements.txt`.
+  - Removed manual DB setup instructions (now handled in `app.py`).
+- Added basic "create" workflow (for adding new feedback).
+- added tests via claude 4.0
+
+
+# Raw Notes
 * follow instructions in the readme
   * Backend: no errors on install app.py runs and immediately completes
     * backend is missing the app.run - added and now the backend starts
