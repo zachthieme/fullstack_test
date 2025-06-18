@@ -94,7 +94,7 @@ def post_feedback():
     message = data.get("message")
     rating = data.get("rating")
     # TODO: make FE handle timezones
-    created_at = datetime.now(timezone.utc).isoformat()
+    created_at = data.get("created_at")
 
     # confirm that there is a value provided - in a production system we would want distinct errors to track issues faster
     if message is None or rating is None:
@@ -105,6 +105,9 @@ def post_feedback():
         return jsonify(
             {"error": "Invalid data type on either 'message' or 'rating'"}
         ), 400
+
+    if not created_at:
+        created_at = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     # TODO: add try so we can catch failures and add a 500
     cursor.execute(
