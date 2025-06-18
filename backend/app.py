@@ -32,9 +32,6 @@ def get_feedback():
         params.append(rating)
 
     def validate_iso(date_str, label):
-        print(f"from={from_date!r}, to={to_date!r}")
-        print(f"[DEBUG] to={repr(to_date)}")
-
         try:
             return datetime.strptime(date_str.strip(), "%Y-%m-%d").date()
         except ValueError:

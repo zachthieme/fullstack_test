@@ -53,7 +53,7 @@ function App() {
       </label>
       <label style={{ marginLeft: 16 }}>
         Sort:&nbsp;
-        <select value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
+        <select value={sortOrder} onChange={e => setSortOrder(e.target.value.trim())}>
           <option value="desc">Newest First</option>
           <option value="asc">Oldest First</option>
         </select>
