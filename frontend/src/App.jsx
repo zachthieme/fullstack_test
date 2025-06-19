@@ -5,43 +5,52 @@ import { format } from "date-fns";
 function App() {
   const [feedback, setFeedback] = useState([]);
 
-  // Filters
+  // Filters - default to nothing 
   const [rating, setRating] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [sortBy, setSortBy] = useState('created_at');
+
+  // Sorting - default to descending
   const [sortOrder, setSortOrder] = useState("desc");
 
-  // New Record
+  // New Record Defaults
   const [newMessage, setNewMessage] = useState("");
   const [newRating, setNewRating] = useState("5");
   const [newDate, setNewDate] = useState(() =>
     format(new Date(), "yyyy-MM-dd"),
   );
 
+  // Start with the Add Feedback controls hidden
   const [showForm, setShowForm] = useState(false);
 
   const loadFeedback = () => {
+    // Build url request string to query the back end
     const params = new URLSearchParams();
     if (rating && rating !== "") params.append("rating", rating);
     if (from) params.append("from", from);
     if (to) params.append("to", to);
+    if (sortBy) params.append('sortBy', sortBy);
     if (sortOrder) params.append("sort", sortOrder);
 
+    // Call the backend
     fetch(`/feedback?${params.toString()}`)
       .then((res) => res.json())
       .then((data) => setFeedback(data))
       .catch(console.error);
   };
 
-  useEffect(loadFeedback, [rating, from, to, sortOrder]);
+  // Ensure that all the correct actions cause the list to reload
+  useEffect(loadFeedback, [rating, from, to, sortOrder, sortBy]);
 
   const addFeedback = () => {
-    // Basic client‑side validation
+    // Basic client‑side validation that the message isn't blank
     if (!newMessage.trim()) {
       alert("Please enter a message.");
       return;
     }
 
+    // Post new feedback to the back end
     fetch("/feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -61,20 +70,6 @@ function App() {
       })
       .catch((err) => alert(err.message));
   };
-
-  useEffect(() => {
-    // Query string with only selected parameters
-    const params = new URLSearchParams();
-    if (rating && rating !== "") params.append("rating", rating);
-    if (from) params.append("from", from);
-    if (to) params.append("to", to);
-    if (sortOrder) params.append("sort", sortOrder);
-
-    fetch(`/feedback?${params.toString()}`)
-      .then((res) => res.json())
-      .then((data) => setFeedback(data))
-      .catch(console.error);
-  }, [rating, from, to, sortOrder]);
 
   return (
     <div>
@@ -108,17 +103,22 @@ function App() {
           onChange={(e) => setTo(e.target.value.trim())}
         />
       </label>
+
       <label style={{ marginLeft: 16 }}>
-        Sort:&nbsp;
-        <select
-          value={sortOrder || "desc"}
-          onChange={(e) => setSortOrder(e.target.value.trim())}
-        >
-          <option value="desc">Newest First</option>
-          <option value="asc">Oldest First</option>
+        Sort By:&nbsp;
+        <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
+          <option value="created_at">Date</option>
+          <option value="rating">Stars</option>
         </select>
       </label>
 
+      <label style={{ marginLeft: 8 }}>
+        Order:&nbsp;
+        <select value={sortOrder} onChange={e => setSortOrder(e.target.value)}>
+          <option value="desc">{sortBy === 'rating' ? 'High to Low' : 'Newest First'}</option>
+          <option value="asc">{sortBy === 'rating' ? 'Low to High' : 'Oldest First'}</option>
+        </select>
+      </label>
       {/* LIST */}
       <ul style={{ marginTop: 24 }}>
         {feedback.map((f) => (

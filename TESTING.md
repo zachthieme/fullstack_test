@@ -1,7 +1,4 @@
 # Testing Documentation
-
-This document provides comprehensive information about the testing setup and strategies for the fullstack feedback application.
-
 ## Overview
 
 The project includes comprehensive test suites for both backend (Flask API) and frontend (React) components:
@@ -330,56 +327,6 @@ Tests require:
 1. **Screen Debug**: `screen.debug()` to see rendered DOM
 2. **Console Logs**: Strategic logging in tests
 3. **Jest Debug**: Use `--inspect-brk` flag for debugging
-
-## Performance Considerations
-
-### Test Optimization
-
-1. **Parallel Execution**: Tests run in parallel where possible
-2. **Mock Efficiency**: Minimize expensive operations in mocks
-3. **Setup Optimization**: Reuse test setup where appropriate
-
-### Resource Management
-
-1. **Memory**: Clean up resources after tests
-2. **File System**: Remove temporary files
-3. **Network**: Mock all external calls
-
-## Contributing
-
-When adding new features:
-
-1. **Write Tests First**: Follow TDD approach
-2. **Update Documentation**: Keep this file current
-3. **Maintain Coverage**: Ensure new code is tested
-4. **Review Test Quality**: Tests should be maintainable and clear
-
-### Test Review Checklist
-
-- [ ] Tests cover happy path and edge cases
-- [ ] Tests are isolated and independent
-- [ ] Test names are descriptive
-- [ ] Proper async handling
-- [ ] Appropriate mocking
-- [ ] Coverage targets met
-- [ ] Tests pass consistently
-
-## Troubleshooting
-
-### Common Test Failures
-
-1. **Timeout Errors**: Increase timeout for slow operations
-2. **Mock Issues**: Verify mock setup and timing
-3. **Async Problems**: Use proper async/await patterns
-4. **DOM Issues**: Ensure proper cleanup between tests
-
-### Getting Help
-
-1. Check test output for specific error messages
-2. Use `screen.debug()` to inspect DOM state
-3. Verify mock configurations
-4. Check for async/timing issues
-5. Review this documentation for patterns
 
 ---
 

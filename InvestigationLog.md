@@ -1,7 +1,38 @@
 
 # Project Setup and Progress Notes
 
-## Setup and Initial Fixes
+## Bugs Resolved
+- **app.py was missing the app.run()** Without this the backend was not starting.
+- **App.jsx missing react scaffolding** The package.json and other files were missing for a minimal react app.
+- **No SQLite db** The backend uses sqlite for a storage layer but there was no code to setup the database with the proper tables.
+- **App.jsx expects JSON** the /feedback route returned a python array of arrays not a json payload like the front end expected.
+- **No Requirements.txt** Requirements.txt did not exist so any dependencies needed to be hand managed.
+- **SQL Injection Risk** The backend did not properly handle user input. 
+
+## Design Decisions
+### SQL
+- Stored dates in UTC to better allow dates to be localized for the user.
+- used sqlite row_factory to extract a dictionary for each record instead of just the results. This made for less post processing of the data.
+- used "where 1=1" trick in sql query to allow the filtering by date/starts to be additive AND statements.
+- did not use a composite index on the table which would help on query times - however if you are to the point where you need an index you probably need a better data store.
+- used parameters in cursor.execute to ensure that injection wasn't possible.
+
+### UI
+- updated the ratings to be actual stars in the drop-down instead of just word/numbers.
+- made the "add feedback" section hide-able so that it doesn't add visual clutter when it isn't needed.
+- made the ASC/DESC "Newest First" and "Oldest First" to make simpler for the user to understand.
+- made it possible to sort by either starts or date - the requirements were vague so i figured i'd start here and if required make it more complex. You could imagine a sort/sub-sort or a group by and then sort.
+
+### Improvements
+- **Identity** the application currently doesn't have any concept of identity. All users are the same users. if this is going to be used by multiple people it should have some auth-n/z and RBAC to allow for users to determine what is public/private and what rights others have to modify items.
+  - There should be some integration with a cloud login provider (apple, google, amazon, facebook) so that people can login with credentials they already have for ease of use.
+- **Security** These endpoints are all over HTTP and there is no authentication between the front end and the backend. This should all be moved to https and leverage some form of token based auth. Additionally if we are doing a multi-user app we should consider encryption at rest and even GDPR.
+- **Internationalization** This is only in english and if it is to be used in other countries it should be made to work in their language.
+- **Accessibility** This was built without any accessibility in mind.
+- **Flair** The UX is bare bones - better use of color, size, shading, better controls (fewer drop-downs) would go a long way.
+- **Usability** The current implementation doesn't allow for the UD operations of CRUD.
+
+## Initial investigation and approach (actual log of investigation and work)
 
 ### Backend
 - Followed instructions in the README.
@@ -67,9 +98,10 @@
 - added tests via claude 4.0
 - added input validating for rating and updated tests
 - noticed that the dates in the ui are displaying as a day in the past eventhough the backend is sending the correct dates. resolved by properly using utc through the app.
+- added the ability to sort by either stars or date
 
 
-# Raw Notes
+# APPENDIX - Raw Notes
 * follow instructions in the readme
   * Backend: no errors on install app.py runs and immediately completes
     * backend is missing the app.run - added and now the backend starts

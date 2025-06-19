@@ -48,11 +48,20 @@ def get_feedback():
     rating = request.args.get("rating", type=int)
     from_date = request.args.get("from")
     to_date = request.args.get("to")
-    sort = request.args.get("sort", "desc").lower()
 
-    if sort not in ["asc", "desc"]:
-        sort = "desc"
+    sort_by = request.args.get("sortBy", "created_at")
+    sort_order = request.args.get("sort", "desc").lower()
 
+    valid_sort_fields = ["created_at", "rating"]
+
+    # set defaults for valid sort fields/order in case someone tries to modify url string
+    if sort_by not in valid_sort_fields:
+        sort_by = "created_at"
+
+    if sort_order not in ["asc", "desc"]:
+        sort_order = "desc"
+
+    # use where 1=1 so that i can make the filters easy to add to the query
     query = "SELECT id, message, rating, created_at FROM feedback WHERE 1=1"
     params = []
 
@@ -76,7 +85,7 @@ def get_feedback():
         query += " AND date(created_at) <= date(?)"
         params.append(to_date)
 
-    query += f" ORDER BY created_at {sort}"  # leaving as f-string i've ensured that it can only be asc/desc and can use params as asc/desc are keywords
+    query += f" ORDER BY {sort_by} {sort_order}"
 
     try:
         rows = cursor.execute(query, params).fetchall()
@@ -132,5 +141,6 @@ def post_feedback():
 
 
 if __name__ == "__main__":
+    # Create the DB if it doesn't exist
     check_and_init_db()
-    app.run(debug=True)
+    app.run()
