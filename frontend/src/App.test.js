@@ -169,7 +169,7 @@ describe('App Component', () => {
         render(<App />);
       });
 
-      const sortSelect = screen.getByLabelText(/sort/i);
+      const sortSelect = screen.getByLabelText(/order/i);
 
       await act(async () => {
         fireEvent.change(sortSelect, { target: { value: 'asc' } });
@@ -187,7 +187,7 @@ describe('App Component', () => {
 
       const ratingSelect = screen.getByLabelText(/rating/i);
       const fromInput = screen.getByLabelText(/from/i);
-      const sortSelect = screen.getByLabelText(/sort/i);
+      const sortSelect = screen.getByLabelText(/order/i);
 
       await act(async () => {
         fireEvent.change(ratingSelect, { target: { value: '4' } });
