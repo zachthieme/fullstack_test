@@ -10,6 +10,10 @@
 - **SQL Injection Risk** The backend did not properly handle user input. 
 
 ## Design Decisions
+### QOL
+- added single script for running all tests
+- started using requirements.txt
+
 ### SQL
 - Stored dates in UTC to better allow dates to be localized for the user.
 - used sqlite row_factory to extract a dictionary for each record instead of just the results. This made for less post processing of the data.
@@ -23,7 +27,7 @@
 - made the ASC/DESC "Newest First" and "Oldest First" to make simpler for the user to understand.
 - made it possible to sort by either starts or date - the requirements were vague so i figured i'd start here and if required make it more complex. You could imagine a sort/sub-sort or a group by and then sort.
 
-### Improvements
+### Improvements Needed
 - **Identity** the application currently doesn't have any concept of identity. All users are the same users. if this is going to be used by multiple people it should have some auth-n/z and RBAC to allow for users to determine what is public/private and what rights others have to modify items.
   - There should be some integration with a cloud login provider (apple, google, amazon, facebook) so that people can login with credentials they already have for ease of use.
 - **Security** These endpoints are all over HTTP and there is no authentication between the front end and the backend. This should all be moved to https and leverage some form of token based auth. Additionally if we are doing a multi-user app we should consider encryption at rest and even GDPR.
@@ -99,6 +103,7 @@
 - added input validating for rating and updated tests
 - noticed that the dates in the ui are displaying as a day in the past eventhough the backend is sending the correct dates. resolved by properly using utc through the app.
 - added the ability to sort by either stars or date
+- used ChatGPT Codex to fix tests and add debounce to api call
 
 
 # APPENDIX - Raw Notes

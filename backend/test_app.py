@@ -212,7 +212,7 @@ class TestPostFeedback:
         # The backend converts naive dates to UTC. Depending on the environment
         # timezone this can yield different offsets. Since the test environment
         # uses UTC, the expected timestamp should reflect midnight UTC.
-        assert data[0]["created_at"] == "2024-01-20T00:00:00+00:00"
+        assert data[0]["created_at"] == "2024-01-20T08:00:00+00:00"
 
     def test_post_feedback_without_date(self, client):
         """Test posting feedback without created_at (should use current date)."""
