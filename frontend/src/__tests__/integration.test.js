@@ -130,7 +130,7 @@ describe('Frontend-Backend Integration Tests', () => {
       const ratingSelect = screen.getByLabelText(/rating/i);
       const fromInput = screen.getByLabelText(/from/i);
       const toInput = screen.getByLabelText(/to/i);
-      const sortSelect = screen.getByLabelText(/sort/i);
+      const sortSelect = screen.getByLabelText(/order/i);
 
       await act(async () => {
         fireEvent.change(ratingSelect, { target: { value: '4' } });

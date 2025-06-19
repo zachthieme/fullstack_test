@@ -30,7 +30,10 @@ function App() {
     if (rating && rating !== "") params.append("rating", rating);
     if (from) params.append("from", from);
     if (to) params.append("to", to);
-    if (sortBy) params.append('sortBy', sortBy);
+    // The backend defaults to sorting by created_at, so only include the field
+    // when the user selects a different option. This keeps the query string
+    // consistent with test expectations.
+    if (sortBy && sortBy !== 'created_at') params.append('sortBy', sortBy);
     if (sortOrder) params.append("sort", sortOrder);
 
     // Call the backend
@@ -40,8 +43,13 @@ function App() {
       .catch(console.error);
   };
 
-  // Ensure that all the correct actions cause the list to reload
-  useEffect(loadFeedback, [rating, from, to, sortOrder, sortBy]);
+  // Ensure that all the correct actions cause the list to reload. To avoid
+  // issuing multiple rapid requests when several filters change at once we
+  // debounce the actual fetch to the next tick.
+  useEffect(() => {
+    const t = setTimeout(loadFeedback);
+    return () => clearTimeout(t);
+  }, [rating, from, to, sortOrder, sortBy]);
 
   const addFeedback = () => {
     // Basic client‑side validation that the message isn't blank
